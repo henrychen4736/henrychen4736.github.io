@@ -19,8 +19,9 @@ for (const s of shots) {
   page.on('console', (m) => m.type() === 'error' && console.log(`[${s.name}] console:`, m.text()))
   page.on('pageerror', (e) => console.log(`[${s.name}] pageerror:`, e.message))
   await page.goto(url, { waitUntil: 'networkidle' })
-  await page.waitForTimeout(4000)
+  await page.waitForTimeout(2500)
   await page.screenshot({ path: `${out}/${s.name}.png` })
+  await page.screenshot({ path: `${out}/${s.name}-full.png`, fullPage: true })
   console.log(`saved ${out}/${s.name}.png`)
   await page.close()
 }

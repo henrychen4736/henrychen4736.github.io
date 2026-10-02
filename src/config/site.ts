@@ -2,101 +2,144 @@
  * ─────────────────────────────────────────────────────────────
  *  SITE CONTENT — edit this file to make the portfolio yours.
  * ─────────────────────────────────────────────────────────────
- *  Everything the visitor reads lives here. Components never
- *  hard-code personal info, so you should not need to touch
- *  anything under /src/components or /src/sections.
- *
- *  Visual settings (colors, gradient, fonts) live in ./theme.ts
+ *  Every card on the page reads from here. To hide a card, empty
+ *  its array (e.g. `publications: []`) and it disappears.
+ *  Colors live in ./theme.ts.
  */
 
-export type SocialKind =
-  | 'github'
-  | 'linkedin'
-  | 'scholar'
-  | 'email'
-  | 'x'
-  | 'orcid'
-  | 'website'
-
-export interface SocialLink {
-  kind: SocialKind
-  label: string
-  href: string
-}
-
-export interface NavLink {
-  label: string
-  /** Anchor (e.g. '#projects') or full URL */
-  href: string
-}
+export type SocialKind = 'github' | 'linkedin' | 'scholar' | 'email' | 'x' | 'orcid' | 'website'
 
 export const site = {
-  /** Shown in the browser tab and used for SEO */
   meta: {
     title: 'Alex Rivera — Portfolio',
-    description:
-      'Computer Science student researching machine learning systems. Projects, publications, and CV.',
+    description: 'CS student working on machine learning systems. Projects, research, and experience.',
   },
 
   person: {
-    firstName: 'Alex',
-    lastName: 'Rivera',
-    /** Letters rendered in liquid metal. Keep to 1–2 characters. */
-    monogram: 'AR',
-    /**
-     * Optional: path to your own logo (transparent PNG/SVG in /public).
-     * If set, it replaces the monogram letters in the liquid-metal emblem.
-     */
-    logoImage: '' as string,
-    /**
-     * Optional: path to a headshot in /public (e.g. '/me.jpg').
-     * If set, the hero shows your photo framed by a liquid-metal ring
-     * instead of the monogram emblem.
-     */
-    photo: '' as string,
-    pronouns: 'they/them',
-    role: 'Computer Science Student',
-    institution: 'University of Somewhere',
+    name: 'Alex Rivera',
+    title: 'CS Student / ML Researcher',
     location: 'City, Country',
-  },
-
-  hero: {
-    /** Small label above your name */
-    eyebrow: 'B.S. Computer Science · Class of 2027',
-    /** One or two sentences. Wrap a phrase in *asterisks* to italicize it in the accent color. */
-    headline:
-      'I build *learning systems* that are fast, reliable, and a little bit delightful.',
-    /** Status pill — set `show: false` to hide. Keep it under ~45 characters. */
-    status: {
-      show: true,
-      text: 'Open to Summer 2027 internships',
-    },
-    primaryCta: { label: 'View my work', href: '#projects' },
-    secondaryCta: { label: 'Get in touch', href: '#contact' },
-    /** Linked from the "Résumé" button in the nav. Drop your PDF in /public. */
+    /** Optional status line next to your name. '' to hide. */
+    status: 'Open to Summer 2027 internships',
     resumeHref: '/cv.pdf',
-    /** Quick facts under the CTAs. 2–4 items work best. */
-    highlights: [
-      { value: '3', label: 'Publications' },
-      { value: '12+', label: 'Projects shipped' },
-      { value: '2', label: 'Research labs' },
-    ],
   },
 
-  nav: [
-    { label: 'About', href: '#about' },
-    { label: 'Research', href: '#research' },
-    { label: 'Projects', href: '#projects' },
-    { label: 'Experience', href: '#experience' },
-    { label: 'Contact', href: '#contact' },
-  ] satisfies NavLink[],
+  /** Short lines, like a terminal bio. 4–7 work best. */
+  about: [
+    'cs undergrad @ university of somewhere',
+    'researching efficient ml systems',
+    'prev - swe intern @ company',
+    'ta for intro to algorithms',
+    'loves compilers, climbing & coffee',
+    'always building something',
+  ],
 
-  socials: [
-    { kind: 'github', label: 'GitHub', href: 'https://github.com/your-handle' },
-    { kind: 'linkedin', label: 'LinkedIn', href: 'https://linkedin.com/in/your-handle' },
-    { kind: 'scholar', label: 'Google Scholar', href: 'https://scholar.google.com/' },
-    { kind: 'email', label: 'Email', href: 'mailto:you@university.edu' },
-  ] satisfies SocialLink[],
+  contact: {
+    blurb: "I'm always open to research collaborations and internship opportunities. Say hi!",
+    links: [
+      { kind: 'email', label: 'you@university.edu', href: 'mailto:you@university.edu' },
+      { kind: 'linkedin', label: 'LinkedIn', href: 'https://linkedin.com/in/your-handle' },
+      { kind: 'github', label: 'GitHub', href: 'https://github.com/your-handle' },
+      { kind: 'scholar', label: 'Google Scholar', href: 'https://scholar.google.com/' },
+    ] as { kind: SocialKind; label: string; href: string }[],
+  },
+
+  education: [
+    {
+      degree: 'B.S. in Computer Science',
+      school: 'University of Somewhere',
+      detail: 'Minor in Mathematics · GPA 3.9',
+      location: 'City, ST',
+      dates: 'Aug 2023 - May 2027',
+    },
+  ],
+
+  /**
+   * Contribution heatmap. This mockup draws placeholder data; set `username`
+   * and later we can fetch real contributions.
+   */
+  activity: {
+    username: 'your-handle',
+    total: 512,
+  },
+
+  projects: [
+    {
+      name: 'TinyServe',
+      description:
+        'A lightweight inference server that batches requests across GPUs, cutting p99 latency by 38% on 7B-parameter models.',
+      tags: ['Python', 'CUDA', 'FastAPI', 'Triton'],
+      links: [
+        { label: 'GitHub', href: 'https://github.com/your-handle/tinyserve' },
+        { label: 'Demo', href: '#' },
+      ],
+    },
+    {
+      name: 'CampusMaps',
+      description:
+        'Indoor navigation app for campus buildings used by 4,000+ students. Built the routing engine and accessibility layer.',
+      tags: ['TypeScript', 'React Native', 'PostGIS'],
+      links: [{ label: 'GitHub', href: 'https://github.com/your-handle/campusmaps' }],
+    },
+    {
+      name: 'Sparse Attention Lab',
+      description:
+        'Research codebase for benchmarking sparse attention kernels; reproduced 6 papers with a unified evaluation harness.',
+      tags: ['PyTorch', 'JAX', 'Weights & Biases'],
+      links: [{ label: 'GitHub', href: 'https://github.com/your-handle/sparse-attn' }],
+    },
+  ],
+
+  experience: [
+    {
+      role: 'Software Engineering Intern',
+      org: 'Company Name',
+      location: 'City, ST',
+      dates: 'Jun 2025 - Aug 2025',
+      description:
+        'Shipped a feature-store caching layer that reduced model training data loads by 3x. Wrote design docs and owned rollout to 12 teams.',
+    },
+    {
+      role: 'Undergraduate Researcher',
+      org: 'Systems & ML Lab, University of Somewhere',
+      location: 'City, ST',
+      dates: 'Jan 2024 - Present',
+      description:
+        'Advised by Prof. Firstname Lastname. Studying memory-efficient training for long-context transformers.',
+    },
+  ],
+
+  /** Your name is auto-highlighted in the author list. */
+  publications: [
+    {
+      title: 'Efficient Long-Context Training via Adaptive Sparse Attention',
+      authors: 'J. Doe, Alex Rivera, F. Lastname',
+      venue: 'NeurIPS 2025 Workshop',
+      links: [
+        { label: 'PDF', href: '#' },
+        { label: 'Code', href: '#' },
+      ],
+    },
+    {
+      title: 'A Benchmark for Reproducible Attention Kernels',
+      authors: 'Alex Rivera, J. Doe',
+      venue: 'arXiv preprint, 2025',
+      links: [{ label: 'arXiv', href: '#' }],
+    },
+  ],
+
+  skills: [
+    { group: 'Languages', icon: 'code', items: ['Python', 'C++', 'TypeScript', 'Java', 'SQL', 'Rust'] },
+    { group: 'ML / AI', icon: 'brain', items: ['PyTorch', 'JAX', 'scikit-learn', 'HF Transformers'] },
+    { group: 'Systems', icon: 'cpu', items: ['CUDA', 'Linux', 'Docker', 'Kubernetes'] },
+    { group: 'Web', icon: 'globe', items: ['React', 'Next.js', 'FastAPI', 'PostgreSQL'] },
+  ] as { group: string; icon: 'code' | 'brain' | 'cpu' | 'globe' | 'database' | 'cloud'; items: string[] }[],
+
+  awards: [
+    { title: "Dean's List (6 semesters)", org: 'University of Somewhere' },
+    { title: '1st Place, HackState 2024', org: 'Out of 180 teams' },
+    { title: 'Undergraduate Research Fellowship', org: 'College of Engineering' },
+  ],
 }
 
 export type Site = typeof site
