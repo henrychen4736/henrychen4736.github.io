@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { site } from './config/site'
 import { PixelScene } from './components/PixelScene'
+import { useEdgeGlow } from './components/useEdgeGlow'
 import {
   About,
   Activity,
@@ -15,6 +16,7 @@ import {
 } from './sections/Cards'
 
 export default function App() {
+  useEdgeGlow()
   useEffect(() => {
     document.title = site.meta.title
     document.querySelector('meta[name="description"]')?.setAttribute('content', site.meta.description)

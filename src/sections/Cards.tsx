@@ -221,7 +221,7 @@ export function Publications() {
             <span className="venue">{p.venue}</span>
             <span className="row">
               {p.links.map((l) => (
-                <a key={l.label} className="link" href={l.href}>
+                <a key={l.label} className="link edge-glow" href={l.href}>
                   {l.label}
                 </a>
               ))}

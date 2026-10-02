@@ -28,5 +28,5 @@ export function Card({ title, icon: Icon, actions, className = '', children }: C
 }
 
 export function Tag({ children }: { children: ReactNode }) {
-  return <span className="tag">{children}</span>
+  return <span className="tag edge-glow">{children}</span>
 }

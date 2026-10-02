@@ -83,11 +83,12 @@ export function Glass({
   }, [size])
 
   const box = `lg-box ${contentClassName}`
+  const live = `${box} edge-glow`
   // Match the glass's corners so hover outlines on the box aren't clipped square
   const boxStyle = size ? { width: size.w, height: size.h, borderRadius: radius } : undefined
   const content = href ? (
     <a
-      className={box}
+      className={live}
       style={boxStyle}
       href={href}
       aria-label={label}
@@ -97,11 +98,11 @@ export function Glass({
       {children}
     </a>
   ) : onClick ? (
-    <button className={box} style={boxStyle} aria-label={label} type="button">
+    <button className={live} style={boxStyle} aria-label={label} type="button">
       {children}
     </button>
   ) : (
-    <div className={box} style={boxStyle}>
+    <div className={live} style={boxStyle}>
       {children}
     </div>
   )

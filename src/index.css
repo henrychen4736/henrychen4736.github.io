@@ -27,6 +27,7 @@
   --name-glow: rgba(196, 167, 255, 0.35);
   --name-shadow: rgba(0, 0, 0, 0.45);
   --page: #0b0a1f;
+  --edge-light: rgba(255, 255, 255, 0.9);
   --chip-shadow: rgba(0, 0, 0, 0.35);
   --glass-depth: rgba(0, 0, 0, 0.6);
 }
@@ -45,6 +46,7 @@
   --name-shadow: rgba(31, 47, 90, 0.28);
   --hero-halo: 0 0 12px rgba(255, 255, 255, 0.9), 0 0 2px rgba(255, 255, 255, 0.9);
   --page: #a6d3fa;
+  --edge-light: color-mix(in srgb, var(--accent) 70%, white);
   --chip-shadow: rgba(40, 60, 120, 0.12);
   --glass-depth: transparent;
 }
@@ -144,10 +146,39 @@ p {
   pointer-events: none;
 }
 
-/* The library's rim layers add a uniform inset hairline; on big cards that
-   reads as an outlined box, so keep only their mouse-tracking gradient. */
-.lg-slot--card > span {
-  box-shadow: none !important;
+/* The library draws its own hover rim as two <span> layers; our pointer-
+   proximity glow (.edge-glow) replaces it. */
+.lg-slot > span {
+  display: none;
+}
+
+/* ───────────── Edge glow (see components/useEdgeGlow.ts) ─────────────
+   A radial light centered on the pointer, masked to a 1px ring: only the
+   stretch of border nearest the cursor brightens. */
+.edge-glow {
+  position: relative;
+}
+
+.edge-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  padding: 2px;
+  background: radial-gradient(circle 80px at var(--gx, -100px) var(--gy, -100px), var(--edge-light), var(--edge-light) 20%, transparent 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: var(--edge, 0);
+  pointer-events: none;
+  transition: opacity 0.15s linear;
+}
+
+/* Small chips sit on their own 1px border, so the ring overlays it */
+.tag.edge-glow::before,
+.link.edge-glow::before {
+  inset: -1px;
 }
 
 /* Library's glass surface: unify the shadow across themes */
@@ -421,7 +452,6 @@ button.lg-box {
 
 .btn--primary:hover {
   background: var(--accent);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 40%, white), 0 0 24px -2px var(--accent);
 }
 
 .icon-btn {
@@ -441,7 +471,6 @@ button.lg-box {
 .icon-btn:hover {
   background: var(--chip-tint-hover);
   color: var(--accent);
-  box-shadow: inset 0 0 0 1px var(--accent);
 }
 
 .icon-btn svg {
@@ -574,7 +603,6 @@ button.lg-box {
 
 .card:hover .badge {
   transform: rotate(-10deg) scale(1.08);
-  border-color: var(--accent);
   color: var(--accent);
 }
 
@@ -798,8 +826,6 @@ button.lg-box {
 
 .link:hover {
   background: var(--chip-tint-hover);
-  border-color: var(--accent);
-  transform: translateY(-2px);
 }
 
 .row {
@@ -829,9 +855,7 @@ button.lg-box {
 }
 
 .tag:hover {
-  transform: translateY(-2px) scale(1.04);
-  border-color: var(--accent);
-  box-shadow: 0 6px 16px -8px var(--accent);
+  background: color-mix(in srgb, var(--tag-bg) 60%, var(--chip-tint-hover));
 }
 
 .pill {
@@ -846,7 +870,6 @@ button.lg-box {
 .pill:hover {
   background: var(--chip-tint-hover);
   color: var(--accent);
-  box-shadow: inset 0 0 0 1px var(--accent);
 }
 
 .pill svg {
