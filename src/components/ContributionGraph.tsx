@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { theme } from '../config/theme'
+import { useTheme } from './ThemeProvider'
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const WEEKS = 52
@@ -8,7 +9,10 @@ const WEEKS = 52
  * GitHub-style contribution heatmap. Uses deterministic placeholder data
  * for the mockup (bursty weeks, quieter weekends).
  */
+const LEVEL_LABEL = ['No contributions', '1–2 contributions', '3–5 contributions', '6–9 contributions', '10+ contributions']
+
 export function ContributionGraph({ total }: { total: number }) {
+  const heat = theme[useTheme().mode].heat
   const weeks = useMemo(() => {
     let s = 42
     const rand = () => ((s = (s * 16807) % 2147483647) / 2147483647)
@@ -39,7 +43,13 @@ export function ContributionGraph({ total }: { total: number }) {
         {weeks.map((days, w) => (
           <div key={w} className="heat__week">
             {days.map((level, d) => (
-              <span key={d} className="heat__cell" style={{ background: theme.colors.heat[level] }} />
+              <span
+                key={d}
+                className="heat__cell"
+                data-level={level}
+                title={`${LEVEL_LABEL[level]} · week ${w + 1}`}
+                style={{ background: heat[level] }}
+              />
             ))}
           </div>
         ))}
@@ -48,7 +58,7 @@ export function ContributionGraph({ total }: { total: number }) {
         <span>{total} contributions in the last year</span>
         <span className="heat__legend">
           Less
-          {theme.colors.heat.map((c) => (
+          {heat.map((c) => (
             <span key={c} className="heat__cell" style={{ background: c }} />
           ))}
           More

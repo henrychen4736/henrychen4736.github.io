@@ -20,7 +20,7 @@ export const site = {
     title: 'CS Student / ML Researcher',
     location: 'City, Country',
     /** Optional status line next to your name. '' to hide. */
-    status: 'Open to Summer 2027 internships',
+    status: 'Open to 2027 internships',
     resumeHref: '/cv.pdf',
   },
 

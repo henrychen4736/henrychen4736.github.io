@@ -11,7 +11,9 @@
     "screenshot": "node scripts/screenshot.mjs"
   },
   "dependencies": {
+    "liquid-glass-react": "^1.1.1",
     "lucide-react": "^1.49.0",
+    "pixelarticons": "^2.4.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "simple-icons": "^16.33.0"

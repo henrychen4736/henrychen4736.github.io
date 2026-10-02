@@ -1,23 +1,23 @@
-import type { LucideIcon } from 'lucide-react'
-import type { ReactNode } from 'react'
+import type { ComponentType, ReactNode, SVGProps } from 'react'
 import { Glass } from './Glass'
 
 interface CardProps {
   title: string
-  icon: LucideIcon
+  /** A pixelarticons component */
+  icon: ComponentType<SVGProps<SVGSVGElement>>
   /** Optional controls on the right of the title row */
   actions?: ReactNode
   className?: string
   children: ReactNode
 }
 
-/** Dark liquid-glass card with a pixel-font heading. */
+/** Liquid-glass card with a pixel-font heading. */
 export function Card({ title, icon: Icon, actions, className = '', children }: CardProps) {
   return (
-    <Glass as="section" className={`card ${className}`} radius={22} bezel={22} refraction={-70} blur={3}>
+    <Glass preset="card" fill radius={22} className={`card ${className}`} contentClassName="card__box">
       <header className="card__head">
         <span className="badge">
-          <Icon size={18} strokeWidth={1.75} />
+          <Icon width={24} height={24} />
         </span>
         <h2>{title}</h2>
         {actions && <div className="card__actions">{actions}</div>}

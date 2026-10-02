@@ -1,177 +1,130 @@
-import {
-  useEffect,
-  useId,
-  useLayoutEffect,
-  useRef,
-  useState,
-  type CSSProperties,
-  type ElementType,
-  type ReactNode,
-} from 'react'
+import LiquidGlass from 'liquid-glass-react'
+import { useLayoutEffect, useRef, useState, type ReactNode } from 'react'
+import { useTheme } from './ThemeProvider'
 
 /**
- * Liquid glass surface.
+ * Layout-friendly wrapper around `liquid-glass-react`.
  *
- * Technique adapted from shuding/liquid-glass (SVG displacement via
- * `backdrop-filter: url(#filter)`): a displacement map is generated for the
- * element's exact size so the backdrop bends toward the rim like a thick lens.
- * Browsers without SVG backdrop filters (Safari, Firefox) fall back to a
- * frosted blur with the same highlights, so it still looks intentional.
+ * The library positions its glass with `top/left: 50%` + `translate(-50%)`,
+ * i.e. it centers itself over a positioned box. So we render an invisible
+ * "ghost" copy of the content in normal flow to give the box its size, then
+ * center the real glass over it with an explicit width/height.
+ *
+ * Everything the library offers comes through: refraction, chromatic edges,
+ * elastic stretch toward the cursor, mouse-tracking rim light, and hover /
+ * press highlights (enabled for anything with `href` or `onClick`).
  */
 
-type GlassProps<T extends ElementType> = {
-  as?: T
-  children?: ReactNode
-  className?: string
-  style?: CSSProperties
-  /** Corner radius in px. Use a large number for a pill. */
-  radius?: number
-  /** Width of the refracting rim in px */
-  bezel?: number
-  /** Displacement strength. Negative values magnify toward the rim. */
-  refraction?: number
-  blur?: number
-} & Omit<React.ComponentPropsWithoutRef<T>, 'as' | 'children' | 'className' | 'style'>
+type Preset = 'card' | 'button' | 'chip'
 
-const supportsSvgBackdrop = (() => {
-  if (typeof navigator === 'undefined') return false
-  // Only Chromium renders url() filters inside backdrop-filter.
-  return /Chrome|Chromium|Edg\//.test(navigator.userAgent) && !/Firefox/.test(navigator.userAgent)
-})()
-
-function buildDisplacementMap(w: number, h: number, radius: number, bezel: number) {
-  // Generated at half resolution; feImage stretches it back up.
-  const s = 0.5
-  const cw = Math.max(2, Math.round(w * s))
-  const ch = Math.max(2, Math.round(h * s))
-  const canvas = document.createElement('canvas')
-  canvas.width = cw
-  canvas.height = ch
-  const ctx = canvas.getContext('2d')!
-  const img = ctx.createImageData(cw, ch)
-  const r = Math.min(radius, w / 2, h / 2)
-  const hw = w / 2
-  const hh = h / 2
-
-  for (let py = 0; py < ch; py++) {
-    for (let px = 0; px < cw; px++) {
-      const x = px / s - hw
-      const y = py / s - hh
-      // Signed distance to a rounded rectangle (negative inside)
-      const qx = Math.abs(x) - (hw - r)
-      const qy = Math.abs(y) - (hh - r)
-      const ox = Math.max(qx, 0)
-      const oy = Math.max(qy, 0)
-      const outside = Math.hypot(ox, oy)
-      const d = outside + Math.min(Math.max(qx, qy), 0) - r
-      const t = Math.min(Math.max(-d / bezel, 0), 1)
-      const strength = Math.pow(1 - t, 2.2)
-      // Outward normal of the rim
-      let nx = 0
-      let ny = 0
-      if (outside > 0) {
-        nx = (ox / outside) * Math.sign(x)
-        ny = (oy / outside) * Math.sign(y)
-      } else if (qx > qy) {
-        nx = Math.sign(x)
-      } else {
-        ny = Math.sign(y)
-      }
-      const i = (py * cw + px) * 4
-      img.data[i] = 128 + nx * strength * 127
-      img.data[i + 1] = 128 + ny * strength * 127
-      img.data[i + 2] = 128
-      img.data[i + 3] = 255
-    }
-  }
-  ctx.putImageData(img, 0, 0)
-  return canvas.toDataURL()
+const presets: Record<Preset, { elasticity: number; displacement: number; blur: number; aberration: number; saturation: number }> = {
+  card: { elasticity: 0.04, displacement: 90, blur: 0.08, aberration: 1.5, saturation: 140 },
+  button: { elasticity: 0.3, displacement: 30, blur: 0.08, aberration: 1.5, saturation: 150 },
+  chip: { elasticity: 0.25, displacement: 22, blur: 0.08, aberration: 1, saturation: 150 },
 }
 
-export function Glass<T extends ElementType = 'div'>({
-  as,
+interface GlassProps {
+  children: ReactNode
+  preset?: Preset
+  /** Classes on the outer slot (layout: margins, grid placement, …) */
+  className?: string
+  /** Classes on the content box (padding, typography, flex, …) */
+  contentClassName?: string
+  radius?: number
+  /** Stretch to the parent's width (cards). Otherwise hugs content. */
+  fill?: boolean
+  href?: string
+  newTab?: boolean
+  onClick?: () => void
+  label?: string
+}
+
+const noop = () => {}
+
+export function Glass({
   children,
+  preset = 'button',
   className = '',
-  style,
+  contentClassName = '',
   radius = 999,
-  bezel = 18,
-  refraction = -60,
-  blur = 6,
-  ...rest
-}: GlassProps<T>) {
-  const Tag = (as ?? 'div') as ElementType
-  const ref = useRef<HTMLElement>(null)
-  const filterId = `lg-${useId().replace(/:/g, '')}`
-  const [size, setSize] = useState({ w: 0, h: 0 })
-  const [map, setMap] = useState('')
+  fill = false,
+  href,
+  newTab,
+  onClick,
+  label,
+}: GlassProps) {
+  const ghost = useRef<HTMLDivElement>(null)
+  const [size, setSize] = useState<{ w: number; h: number } | null>(null)
+  // Bright backdrops show refraction artifacts more, so light mode bends less.
+  const light = useTheme().mode === 'light'
+  const p = presets[preset]
+  // Bright backdrops show refraction artifacts more: cards bend less and frost more in light mode
+  const soft = light ? (preset === 'card' ? 0.35 : 0.6) : 1
+  const blur = light && preset === 'card' ? 0.4 : p.blur
+  // High saturation amplifies the pastel facades behind light cards into smears
+  const saturation = light ? 110 : p.saturation
 
   useLayoutEffect(() => {
-    const el = ref.current
-    if (!el || !supportsSvgBackdrop) return
-    const ro = new ResizeObserver(() => {
+    const el = ghost.current!
+    const measure = () => {
       const w = el.offsetWidth
       const h = el.offsetHeight
-      setSize((prev) => (prev.w === w && prev.h === h ? prev : { w, h }))
-    })
+      setSize((s) => (s && s.w === w && s.h === h ? s : { w, h }))
+    }
+    measure()
+    const ro = new ResizeObserver(measure)
     ro.observe(el)
     return () => ro.disconnect()
   }, [])
 
-  useEffect(() => {
-    if (!size.w || !size.h) return
-    setMap(buildDisplacementMap(size.w, size.h, radius, bezel))
-  }, [size.w, size.h, radius, bezel])
+  // The library re-measures its highlight layers on window resize only.
+  useLayoutEffect(() => {
+    if (size) window.dispatchEvent(new Event('resize'))
+  }, [size])
 
-  const r = Math.min(radius, size.h ? size.h / 2 : radius)
-  const backdrop = map
-    ? `url(#${filterId}) blur(${blur}px) saturate(170%) brightness(1.05)`
-    : `blur(${blur * 2.5}px) saturate(170%) brightness(1.05)`
+  const box = `lg-box ${contentClassName}`
+  const boxStyle = size ? { width: size.w, height: size.h } : undefined
+  const content = href ? (
+    <a
+      className={box}
+      style={boxStyle}
+      href={href}
+      aria-label={label}
+      target={newTab ? '_blank' : undefined}
+      rel={newTab ? 'noreferrer' : undefined}
+    >
+      {children}
+    </a>
+  ) : onClick ? (
+    <button className={box} style={boxStyle} aria-label={label} type="button">
+      {children}
+    </button>
+  ) : (
+    <div className={box} style={boxStyle}>
+      {children}
+    </div>
+  )
 
   return (
-    <Tag
-      ref={ref}
-      className={`glass ${className}`}
-      style={
-        {
-          ...style,
-          '--glass-radius': `${r}px`,
-          '--glass-backdrop': backdrop,
-        } as CSSProperties
-      }
-      {...rest}
-    >
-      {map && (
-        <svg className="glass__defs" aria-hidden width="0" height="0">
-          <filter
-            id={filterId}
-            x="0"
-            y="0"
-            width={size.w}
-            height={size.h}
-            filterUnits="userSpaceOnUse"
-            colorInterpolationFilters="sRGB"
-          >
-            <feImage
-              href={map}
-              x="0"
-              y="0"
-              width={size.w}
-              height={size.h}
-              preserveAspectRatio="none"
-              result="map"
-            />
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="map"
-              scale={refraction}
-              xChannelSelector="R"
-              yChannelSelector="G"
-            />
-          </filter>
-        </svg>
+    <div className={`lg-slot lg-slot--${preset} ${fill ? 'lg-slot--fill' : ''} ${className}`}>
+      <div ref={ghost} className={`${box} lg-ghost`} aria-hidden inert>
+        {children}
+      </div>
+      {size && (
+        <LiquidGlass
+          style={{ position: 'absolute', top: '50%', left: '50%' }}
+          cornerRadius={radius}
+          padding="0"
+          elasticity={p.elasticity}
+          displacementScale={p.displacement * soft}
+          blurAmount={blur}
+          aberrationIntensity={p.aberration * soft}
+          saturation={saturation}
+          onClick={onClick ?? (href ? noop : undefined)}
+        >
+          {content}
+        </LiquidGlass>
       )}
-      <span className="glass__shine" aria-hidden />
-      <span className="glass__content">{children}</span>
-    </Tag>
+    </div>
   )
 }

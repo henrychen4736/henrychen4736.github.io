@@ -1,7 +1,6 @@
+import { ExternalLink, FileText, MapPin } from 'lucide-react'
 import {
-  Award,
   BookOpen,
-  Brain,
   Briefcase,
   ChevronLeft,
   ChevronRight,
@@ -9,46 +8,65 @@ import {
   Code,
   Cpu,
   Database,
-  ExternalLink,
-  FileText,
-  FolderGit2,
+  Folder,
   GitBranch,
   Globe,
-  GraduationCap,
+  Lightbulb,
   Mail,
-  MapPin,
+  Moon,
   Sparkles,
+  Sun,
+  Teach,
+  Trophy,
   User,
-} from 'lucide-react'
+} from 'pixelarticons/react'
 import { Fragment, useState } from 'react'
 import { site } from '../config/site'
+import { theme } from '../config/theme'
 import { Card, Tag } from '../components/Card'
 import { ContributionGraph } from '../components/ContributionGraph'
 import { Glass } from '../components/Glass'
 import { SocialIcon } from '../components/Icon'
+import { useTheme } from '../components/ThemeProvider'
+
+function ThemeToggle() {
+  const { mode, toggle } = useTheme()
+  const next = mode === 'dark' ? 'light' : 'dark'
+  return (
+    <Glass onClick={toggle} label={`Switch to ${next} mode`} contentClassName="icon-btn theme-toggle">
+      <span className="theme-toggle__icons" data-mode={mode}>
+        <Sun width={24} height={24} />
+        <Moon width={24} height={24} />
+      </span>
+    </Glass>
+  )
+}
 
 export function Header() {
   const { name, title, location, status, resumeHref } = site.person
   return (
     <header className="intro">
       <div>
-        <h1 className="intro__name">{name}</h1>
+        <h1 className="intro__name" data-text={name}>
+          {name}
+        </h1>
         <p className="intro__title">{title}</p>
         <p className="intro__loc">
           <MapPin size={13} /> {location}
         </p>
+        <div className="intro__actions">
+          <Glass href={resumeHref} newTab contentClassName="btn btn--primary">
+            <FileText size={15} /> Résumé
+          </Glass>
+          {status && (
+            <Glass preset="chip" contentClassName="status">
+              <span className="status__dot" />
+              {status}
+            </Glass>
+          )}
+        </div>
       </div>
-      <div className="intro__side">
-        {status && (
-          <span className="status">
-            <span className="status__dot" />
-            {status}
-          </span>
-        )}
-        <Glass as="a" href={resumeHref} className="btn" radius={999} bezel={12} refraction={-40}>
-          <FileText size={15} /> Résumé
-        </Glass>
-      </div>
+      <ThemeToggle />
     </header>
   )
 }
@@ -74,8 +92,11 @@ export function Contact() {
         {links.map((l) => (
           <li key={l.href}>
             <a href={l.href} target={l.href.startsWith('http') ? '_blank' : undefined} rel="noreferrer">
-              <SocialIcon kind={l.kind} size={15} />
-              {l.label}
+              <span className="links__icon">
+                <SocialIcon kind={l.kind} size={15} />
+              </span>
+              <span className="links__label">{l.label}</span>
+              <ExternalLink size={12} className="links__arrow" />
             </a>
           </li>
         ))}
@@ -87,7 +108,7 @@ export function Contact() {
 export function Education() {
   if (!site.education.length) return null
   return (
-    <Card className="card--education" title="Education" icon={GraduationCap}>
+    <Card className="card--education" title="Education" icon={Teach}>
       {site.education.map((e) => (
         <div key={e.degree} className="entry">
           <h3>{e.degree}</h3>
@@ -112,22 +133,27 @@ export function Activity() {
 
 export function Projects() {
   const [i, setI] = useState(0)
+  const [dir, setDir] = useState(1)
   const n = site.projects.length
+  const go = (d: number) => {
+    setDir(d)
+    setI((cur) => (cur + d + n) % n)
+  }
   if (!n) return null
   const p = site.projects[i]
   const nav = (
     <>
-      <button className="round" aria-label="Previous project" onClick={() => setI((i - 1 + n) % n)}>
-        <ChevronLeft size={16} />
-      </button>
-      <button className="round" aria-label="Next project" onClick={() => setI((i + 1) % n)}>
-        <ChevronRight size={16} />
-      </button>
+      <Glass preset="chip" label="Previous project" onClick={() => go(-1)} contentClassName="icon-btn icon-btn--sm">
+        <ChevronLeft width={24} height={24} />
+      </Glass>
+      <Glass preset="chip" label="Next project" onClick={() => go(1)} contentClassName="icon-btn icon-btn--sm">
+        <ChevronRight width={24} height={24} />
+      </Glass>
     </>
   )
   return (
-    <Card className="card--projects" title="Projects" icon={FolderGit2} actions={n > 1 ? nav : undefined}>
-      <div className="entry">
+    <Card className="card--projects" title="Projects" icon={Folder} actions={n > 1 ? nav : undefined}>
+      <div key={i} className={`entry project ${dir > 0 ? 'project--next' : 'project--prev'}`}>
         <div className="entry__row entry__row--keep">
           <h3 className="big">{p.name}</h3>
           <span className="muted small">
@@ -142,10 +168,10 @@ export function Projects() {
         </div>
         <div className="row">
           {p.links.map((l) => (
-            <a key={l.label} className="pill" href={l.href} target="_blank" rel="noreferrer">
+            <Glass key={l.label} preset="chip" href={l.href} newTab contentClassName="pill">
               {l.label === 'GitHub' ? <SocialIcon kind="github" size={14} /> : <ExternalLink size={14} />}
               {l.label}
-            </a>
+            </Glass>
           ))}
         </div>
       </div>
@@ -207,10 +233,10 @@ export function Publications() {
   )
 }
 
-const skillIcons = { code: Code, brain: Brain, cpu: Cpu, globe: Globe, database: Database, cloud: Cloud }
-const skillColors = ['#c4a7ff', '#7cc4ff', '#5ee6a0', '#ffc46b', '#ff8fa3', '#8ef0ff']
+const skillIcons = { code: Code, brain: Lightbulb, cpu: Cpu, globe: Globe, database: Database, cloud: Cloud }
 
 export function Skills() {
+  const { skillColors } = theme[useTheme().mode]
   if (!site.skills.length) return null
   return (
     <Card className="card--skills" title="Skills" icon={Sparkles}>
@@ -220,7 +246,7 @@ export function Skills() {
           return (
             <div key={g.group}>
               <h3 className="skills__head" style={{ color: skillColors[idx % skillColors.length] }}>
-                <Icon size={15} /> <span>{g.group}</span>
+                <Icon width={24} height={24} /> <span>{g.group}</span>
               </h3>
               <div className="tags">
                 {g.items.map((s) => (
@@ -238,10 +264,10 @@ export function Skills() {
 export function Awards() {
   if (!site.awards.length) return null
   return (
-    <Card className="card--awards" title="Awards" icon={Award}>
+    <Card className="card--awards" title="Awards" icon={Trophy}>
       {site.awards.map((a) => (
         <div key={a.title} className="award">
-          <Award size={16} className="award__icon" />
+          <Trophy width={24} height={24} className="award__icon" />
           <div>
             <h3>{a.title}</h3>
             <p className="muted small">{a.org}</p>
