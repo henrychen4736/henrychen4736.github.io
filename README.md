@@ -3,7 +3,7 @@
 A pixel-art × liquid-glass portfolio for students — built to impress recruiters, interviewers, and professors.
 
 - **Pixel-art background**: a procedurally drawn night city (`src/components/PixelScene.tsx`), rendered crisp at any size
-- **Liquid glass UI**: [`liquid-glass-react`](https://github.com/rdev/liquid-glass-react) — edge refraction, chromatic aberration, elastic stretch toward the cursor, and hover/press highlights. Full refraction in Chromium; Safari/Firefox get the frosted blur. Wrapped by `src/components/Glass.tsx` so it works in normal page layout (presets: `card`, `button`, `chip`).
+- **Liquid glass UI**: [`liquid-glass-react`](https://github.com/rdev/liquid-glass-react) — edge refraction, chromatic aberration, and hover/press highlights. Full refraction in Chromium; Safari/Firefox get the frosted blur. Wrapped by `src/components/Glass.tsx` so it works in normal page layout (presets: `card`, `button`, `chip`).
 - **Light & dark themes**: sun/moon toggle (remembered per visitor, defaults to the OS setting); the pixel city switches between night and day
 - **Bento layout**: About, Contact, Education, Awards, GitHub activity, Projects, Experience, Publications, Skills
 

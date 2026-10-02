@@ -10,17 +10,17 @@ import { useTheme } from './ThemeProvider'
  * "ghost" copy of the content in normal flow to give the box its size, then
  * center the real glass over it with an explicit width/height.
  *
- * Everything the library offers comes through: refraction, chromatic edges,
- * elastic stretch toward the cursor, mouse-tracking rim light, and hover /
- * press highlights (enabled for anything with `href` or `onClick`).
+ * We use its refraction, chromatic edges, mouse-tracking rim light, and
+ * hover / press highlights (enabled for anything with `href` or `onClick`).
+ * Its elastic stretch toward the cursor is turned off so shapes stay fixed.
  */
 
 type Preset = 'card' | 'button' | 'chip'
 
-const presets: Record<Preset, { elasticity: number; displacement: number; blur: number; aberration: number; saturation: number }> = {
-  card: { elasticity: 0.04, displacement: 90, blur: 0.08, aberration: 1.5, saturation: 140 },
-  button: { elasticity: 0.3, displacement: 30, blur: 0.08, aberration: 1.5, saturation: 150 },
-  chip: { elasticity: 0.25, displacement: 22, blur: 0.08, aberration: 1, saturation: 150 },
+const presets: Record<Preset, { displacement: number; blur: number; aberration: number; saturation: number }> = {
+  card: { displacement: 90, blur: 0.08, aberration: 1.5, saturation: 140 },
+  button: { displacement: 30, blur: 0.08, aberration: 1.5, saturation: 150 },
+  chip: { displacement: 22, blur: 0.08, aberration: 1, saturation: 150 },
 }
 
 interface GlassProps {
@@ -83,7 +83,8 @@ export function Glass({
   }, [size])
 
   const box = `lg-box ${contentClassName}`
-  const boxStyle = size ? { width: size.w, height: size.h } : undefined
+  // Match the glass's corners so hover outlines on the box aren't clipped square
+  const boxStyle = size ? { width: size.w, height: size.h, borderRadius: radius } : undefined
   const content = href ? (
     <a
       className={box}
@@ -115,7 +116,8 @@ export function Glass({
           style={{ position: 'absolute', top: '50%', left: '50%' }}
           cornerRadius={radius}
           padding="0"
-          elasticity={p.elasticity}
+          // No elastic stretch/drift toward the cursor: shapes stay fixed
+          elasticity={0}
           displacementScale={p.displacement * soft}
           blurAmount={blur}
           aberrationIntensity={p.aberration * soft}
