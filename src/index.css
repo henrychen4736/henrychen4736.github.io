@@ -26,8 +26,8 @@
   --glass-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.7);
   --name-glow: rgba(196, 167, 255, 0.35);
   --name-shadow: rgba(0, 0, 0, 0.45);
-  --glitch-a: #ffb84d;
-  --glitch-b: #5aa2ff;
+  --glitch-a: #ffc46b;
+  --glitch-b: #b48cff;
   --page: #0b0a1f;
   --edge-light: rgba(255, 255, 255, 0.9);
   --chip-shadow: rgba(0, 0, 0, 0.35);
@@ -47,7 +47,7 @@
   --name-glow: transparent;
   --name-shadow: rgba(31, 47, 90, 0.28);
   --glitch-a: #ff9d1f;
-  --glitch-b: #1a56c4;
+  --glitch-b: #3d84ff;
   --hero-halo: 0 0 12px rgba(255, 255, 255, 0.9), 0 0 2px rgba(255, 255, 255, 0.9);
   --page: #a6d3fa;
   /* Sunlight amber: warm against the blue sky, still visible on white glass */
@@ -331,7 +331,44 @@ button.lg-box {
 }
 
 .intro__name:hover::after {
-  animation: glitch 0.5s steps(2) reverse both;
+  animation: glitch-b 0.5s steps(2) both;
+}
+
+/* Light mode: the name itself flashes white for the glitch, then snaps back */
+:root[data-theme='light'] .intro__name:hover {
+  animation: name-flash 0.5s steps(1) both;
+}
+
+@keyframes name-flash {
+  from {
+    color: #fff;
+  }
+  to {
+    color: var(--text);
+  }
+}
+
+/* Mirror of `glitch`. Running that one in reverse ended on its first frame,
+   leaving a colored sliver on the name for as long as it stayed hovered. */
+@keyframes glitch-b {
+  0% {
+    opacity: 0.85;
+    transform: translate(2px, 0);
+    clip-path: inset(70% 0 0 0);
+  }
+  33% {
+    transform: translate(-3px, 0);
+    clip-path: inset(40% 0 20% 0);
+  }
+  66% {
+    transform: translate(3px, 0);
+    clip-path: inset(0 0 60% 0);
+  }
+  100% {
+    opacity: 0;
+    transform: none;
+    clip-path: inset(0);
+  }
 }
 
 @keyframes glitch {

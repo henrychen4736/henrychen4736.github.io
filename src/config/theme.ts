@@ -115,7 +115,8 @@ export const theme = {
     accent: '#1a56c4',
     gold: '#9a4f00',
     heat: ['#d3d9e6', '#a9c8f2', '#6ea2e8', '#3a78d4', '#1a56c4'],
-    skillColors: ['#1a56c4'],
+    /* One per material in the daytime scene, all equally dark: sky, leaf, gold ore, roof tile */
+    skillColors: ['#1a56c4', '#1f7a34', '#876000', '#b8243c'],
     scene: {
       sky: ['#7cbcf5', '#8cc5f7', '#a2d0f9', '#c3e1fb'],
       dither: 0.2,
