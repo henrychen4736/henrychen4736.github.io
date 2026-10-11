@@ -12,26 +12,27 @@ export type SocialKind = 'github' | 'linkedin' | 'scholar' | 'email' | 'x' | 'or
 export const site = {
   meta: {
     title: 'Henry Chen — Portfolio',
-    description: 'CS student working on machine learning systems. Projects, research, and experience.',
+    description:
+      'Henry Chen is a Berkeley statistics student who builds reinforcement learning agents and computer vision systems.',
   },
 
   person: {
     name: 'Henry Chen',
-    title: 'CS Student / ML Researcher',
-    location: 'City, Country',
+    title: 'Statistics @ UC Berkeley · ML & RL',
+    location: 'Berkeley, CA',
     /** Optional status line next to your name. '' to hide. */
-    status: 'Open to 2027 internships',
-    resumeHref: '/cv.pdf',
+    status: 'Open to Summer 2027 internships',
+    resumeHref: '/henry-chen-resume.pdf',
   },
 
   /** Short lines, like a terminal bio. 4–7 work best. */
   about: [
     'statistics BA @ uc berkeley',
-    'researching efficient ml systems',
-    'prev - swe intern @ company',
-    'ta for intro to algorithms',
-    'loves compilers, climbing & coffee',
-    'always building something',
+    'beat the best human lap on 4 polytrack tracks with ms-level search',
+    'built tennis iq, an AI tennis coach (1st, congressional app challenge)',
+    "its stroke classifier hits 99% on stroke family for players it's never seen",
+    'two summers building a lunar base sim with caltech / lunax',
+    'run kode4kids: free coding classes for 100+ kids',
   ],
 
   contact: {
@@ -40,105 +41,95 @@ export const site = {
       { kind: 'email', label: 'henrychen4736@berkeley.edu', href: 'mailto:henrychen4736@berkeley.edu' },
       { kind: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/in/henry-chen-061230354/' },
       { kind: 'github', label: 'GitHub', href: 'https://github.com/henrychen4736' },
-      { kind: 'scholar', label: 'Google Scholar', href: 'https://scholar.google.com/' },
     ] as { kind: SocialKind; label: string; href: string }[],
   },
 
   education: [
     {
-      degree: 'B.S. in Computer Science',
-      school: 'University of Somewhere',
-      detail: 'Minor in Mathematics · GPA 3.9',
-      location: 'City, ST',
-      dates: 'Aug 2023 - May 2027',
+      degree: 'B.A. Statistics',
+      school: 'University of California, Berkeley',
+      detail: 'Coursework: CS 61A, CS 70 · In progress: CS 61B, DATA C8, Math 54',
+      location: 'Berkeley, CA',
+      dates: 'Aug 2026 – May 2030 (expected)',
     },
   ],
 
   /**
-   * Contribution heatmap. This mockup draws placeholder data; set `username`
-   * and later we can fetch real contributions.
+   * Contribution heatmap. It draws placeholder data, so it stays hidden
+   * (`show: false`) until real contributions are fetched for `username`.
    */
   activity: {
-    username: 'your-handle',
+    show: false,
+    username: 'henrychen4736',
     total: 512,
   },
 
   projects: [
     {
-      name: 'TinyServe',
+      name: 'Polytrack-ML',
       description:
-        'A lightweight inference server that batches requests across GPUs, cutting p99 latency by 38% on 7B-parameter models.',
-      tags: ['Python', 'CUDA', 'FastAPI', 'Triton'],
-      links: [
-        { label: 'GitHub', href: 'https://github.com/your-handle/tinyserve' },
-        { label: 'Demo', href: '#' },
-      ],
+        'Headless PolyTrack simulator that exactly reproduces all 27 official leaderboard replays, used for RL and search. Millisecond-level search beat the best human lap on 4 tracks by 27–55 ms, and an IQN agent trained from scratch got within 1% of the human best in 3 hours.',
+      tags: ['PyTorch', 'IQN', 'PPO', 'Behavior Cloning', 'Node.js', 'CUDA'],
+      links: [],
     },
     {
-      name: 'CampusMaps',
+      name: 'Tennis IQ',
       description:
-        'Indoor navigation app for campus buildings used by 4,000+ students. Built the routing engine and accessibility layer.',
-      tags: ['TypeScript', 'React Native', 'PostGIS'],
-      links: [{ label: 'GitHub', href: 'https://github.com/your-handle/campusmaps' }],
+        'AI tennis coach that detects every stroke in a phone video, tracks the player in 3D and scores the swing on biomechanics such as contact point and hip–shoulder separation. Its pose-sequence CNN classifies 9 stroke types with 80% accuracy and stroke family with 99% accuracy on held-out players. Won 1st place in the Congressional App Challenge (NV-03).',
+      tags: ['PyTorch', 'MediaPipe', 'ONNX', 'FastAPI', 'Flutter', 'Firebase'],
+      links: [{ label: 'GitHub', href: 'https://github.com/henrychen4736/CAC24' }],
     },
-    {
-      name: 'Sparse Attention Lab',
-      description:
-        'Research codebase for benchmarking sparse attention kernels; reproduced 6 papers with a unified evaluation harness.',
-      tags: ['PyTorch', 'JAX', 'Weights & Biases'],
-      links: [{ label: 'GitHub', href: 'https://github.com/your-handle/sparse-attn' }],
-    },
-  ],
+  ] as { name: string; description: string; tags: string[]; links: { label: string; href: string }[] }[],
 
   experience: [
     {
-      role: 'Software Engineering Intern',
-      org: 'Company Name',
-      location: 'City, ST',
-      dates: 'Jun 2025 - Aug 2025',
+      role: 'Software Development Intern',
+      org: 'Caltech / LunaX',
+      location: 'Pasadena, CA',
+      dates: 'Summers 2024 & 2025',
       description:
-        'Shipped a feature-store caching layer that reduced model training data loads by 3x. Wrote design docs and owned rollout to 12 teams.',
+        'Built the tiling, networking and terrain-based pathfinding systems for a Unity lunar base simulation, working under Dr. Jonathan Jiang of NASA JPL.',
     },
     {
-      role: 'Undergraduate Researcher',
-      org: 'Systems & ML Lab, University of Somewhere',
-      location: 'City, ST',
-      dates: 'Jan 2024 - Present',
+      role: 'Web Development Intern',
+      org: 'WPrime Sports',
+      location: 'Virtual',
+      dates: 'Nov 2025 – Feb 2026',
+      description: 'Built web features in React.',
+    },
+    {
+      role: 'President (formerly Treasurer & Scratch Director)',
+      org: 'Kode4Kids',
+      location: 'Diamond Bar, CA',
+      dates: 'Dec 2023 – 2026',
       description:
-        'Advised by Prof. Firstname Lastname. Studying memory-efficient training for long-context transformers.',
+        'Led a volunteer nonprofit through incorporation, wrote its curriculum and mentored about 15 instructors teaching free coding classes to 100+ students.',
     },
   ],
 
   /** Your name is auto-highlighted in the author list. */
-  publications: [
-    {
-      title: 'Efficient Long-Context Training via Adaptive Sparse Attention',
-      authors: 'J. Doe, Alex Rivera, F. Lastname',
-      venue: 'NeurIPS 2025 Workshop',
-      links: [
-        { label: 'PDF', href: '#' },
-        { label: 'Code', href: '#' },
-      ],
-    },
-    {
-      title: 'A Benchmark for Reproducible Attention Kernels',
-      authors: 'Alex Rivera, J. Doe',
-      venue: 'arXiv preprint, 2025',
-      links: [{ label: 'arXiv', href: '#' }],
-    },
-  ],
+  publications: [] as { title: string; authors: string; venue: string; links: { label: string; href: string }[] }[],
 
   skills: [
-    { group: 'Languages', icon: 'code', items: ['Python', 'C++', 'TypeScript', 'Java', 'SQL', 'Rust'] },
-    { group: 'ML / AI', icon: 'brain', items: ['PyTorch', 'JAX', 'scikit-learn', 'HF Transformers'] },
-    { group: 'Systems', icon: 'cpu', items: ['CUDA', 'Linux', 'Docker', 'Kubernetes'] },
-    { group: 'Web', icon: 'globe', items: ['React', 'Next.js', 'FastAPI', 'PostgreSQL'] },
+    { group: 'Languages', icon: 'code', items: ['Python', 'C++', 'Java', 'JavaScript', 'SQL', 'Dart', 'C#'] },
+    {
+      group: 'ML / AI',
+      icon: 'brain',
+      items: ['PyTorch', 'scikit-learn', 'pandas', 'OpenCV', 'MediaPipe', 'ONNX', 'PPO', 'IQN', 'behavior cloning'],
+    },
+    {
+      group: 'Systems & Tools',
+      icon: 'cpu',
+      items: ['FastAPI', 'Flask', 'Node.js', 'Docker', 'Firebase', 'Google Cloud', 'Linux', 'Git', 'Unity'],
+    },
+    { group: 'Web & Mobile', icon: 'globe', items: ['React', 'Tailwind CSS', 'Flutter'] },
   ] as { group: string; icon: 'code' | 'brain' | 'cpu' | 'globe' | 'database' | 'cloud'; items: string[] }[],
 
   awards: [
-    { title: "Dean's List (6 semesters)", org: 'University of Somewhere' },
-    { title: '1st Place, HackState 2024', org: 'Out of 180 teams' },
-    { title: 'Undergraduate Research Fellowship', org: 'College of Engineering' },
+    {
+      title: '1st Place, Congressional App Challenge (NV-03)',
+      org: 'U.S. House of Representatives, 2024 · presented at #HouseOfCode, U.S. Capitol',
+    },
   ],
 }
 

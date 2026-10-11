@@ -124,6 +124,7 @@ export function Education() {
 }
 
 export function Activity() {
+  if (!site.activity.show) return null
   return (
     <Card title="GitHub Activity" icon={GitBranch} className="card--activity">
       <ContributionGraph total={site.activity.total} />
@@ -166,14 +167,16 @@ export function Projects() {
             <Tag key={t}>{t}</Tag>
           ))}
         </div>
-        <div className="row">
-          {p.links.map((l) => (
-            <Glass key={l.label} preset="chip" href={l.href} newTab contentClassName="pill">
-              {l.label === 'GitHub' ? <SocialIcon kind="github" size={14} /> : <ExternalLink size={14} />}
-              {l.label}
-            </Glass>
-          ))}
-        </div>
+        {p.links.length > 0 && (
+          <div className="row">
+            {p.links.map((l) => (
+              <Glass key={l.label} preset="chip" href={l.href} newTab contentClassName="pill">
+                {l.label === 'GitHub' ? <SocialIcon kind="github" size={14} /> : <ExternalLink size={14} />}
+                {l.label}
+              </Glass>
+            ))}
+          </div>
+        )}
       </div>
     </Card>
   )

@@ -1121,6 +1121,17 @@ button.lg-box {
     flex-direction: column;
     gap: 2px;
   }
+  /* Footer stacks instead of wrapping mid-phrase */
+  .foot {
+    flex-direction: column;
+    gap: 2px;
+    border-radius: 18px;
+    text-align: center;
+  }
+
+  .foot__dot {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

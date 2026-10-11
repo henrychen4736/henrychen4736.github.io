@@ -31,7 +31,6 @@ export default function App() {
           <About />
           <Contact />
           <Education />
-          <Awards />
         </div>
         <div className="col col--main">
           <Header />
@@ -39,11 +38,12 @@ export default function App() {
           <div className="split">
             <div className="col">
               <Projects />
-              <Experience />
+              <Skills />
             </div>
             <div className="col">
+              <Experience />
               <Publications />
-              <Skills />
+              <Awards />
             </div>
           </div>
         </div>
