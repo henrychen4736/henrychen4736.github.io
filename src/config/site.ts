@@ -70,7 +70,7 @@ export const site = {
       description:
         'Headless PolyTrack simulator that exactly reproduces all 27 official leaderboard replays, used for RL and search. Millisecond-level search beat the best human lap on 4 tracks by 27–55 ms, and an IQN agent trained from scratch got within 1% of the human best in 3 hours.',
       tags: ['PyTorch', 'IQN', 'PPO', 'Behavior Cloning', 'Node.js', 'CUDA'],
-      links: [],
+      links: [{ label: 'GitHub', href: 'https://github.com/henrychen4736/Polytrack-ML' }],
     },
     {
       name: 'Tennis IQ',
@@ -129,6 +129,10 @@ export const site = {
     {
       title: '1st Place, Congressional App Challenge (NV-03)',
       org: 'U.S. House of Representatives, 2024 · presented at #HouseOfCode, U.S. Capitol',
+    },
+    {
+      title: '5th Place in California, Website Development',
+      org: 'FBLA State Leadership Conference (SLC), 2025',
     },
   ],
 }

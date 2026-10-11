@@ -567,10 +567,16 @@ button.lg-box {
 
 /* ───────────── Cards ───────────── */
 
-/* `backwards` (not `both`): a filling opacity animation would make the card a
-   backdrop root and stop the glass from blurring what's behind it. */
+/* The card itself only slides. Fading it would make it a backdrop root for
+   the length of the animation, so the glass couldn't blur what's behind it
+   until the fade finished. The fade runs on the content box instead, which
+   sits beside the blur layer rather than around it. */
 .card {
-  animation: rise 0.7s var(--ease) backwards;
+  animation: rise 0.7s var(--ease) var(--rise-delay, 0s) backwards;
+}
+
+.card .card__box {
+  animation: fade-in 0.7s var(--ease) var(--rise-delay, 0s) backwards;
 }
 
 .card__box {
@@ -606,21 +612,26 @@ button.lg-box {
 
 @keyframes rise {
   from {
-    opacity: 0;
     transform: translateY(16px);
   }
 }
 
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
 /* Entrance stagger */
-.card--about { animation-delay: 0.05s; }
-.card--activity { animation-delay: 0.1s; }
-.card--contact { animation-delay: 0.15s; }
-.card--projects { animation-delay: 0.2s; }
-.card--publications { animation-delay: 0.25s; }
-.card--education { animation-delay: 0.3s; }
-.card--experience { animation-delay: 0.35s; }
-.card--skills { animation-delay: 0.4s; }
-.card--awards { animation-delay: 0.45s; }
+.card--about { --rise-delay: 0.05s; }
+.card--activity { --rise-delay: 0.1s; }
+.card--contact { --rise-delay: 0.15s; }
+.card--projects { --rise-delay: 0.2s; }
+.card--publications { --rise-delay: 0.25s; }
+.card--education { --rise-delay: 0.3s; }
+.card--experience { --rise-delay: 0.35s; }
+.card--skills { --rise-delay: 0.4s; }
+.card--awards { --rise-delay: 0.45s; }
 
 .card__head {
   display: flex;
