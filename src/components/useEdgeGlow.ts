@@ -10,6 +10,9 @@ import { useEffect } from 'react'
  * The glow is a radial gradient masked to a 1px ring, so only the stretch of
  * border nearest the cursor lights up. Toward the middle of an element the
  * pointer is far from every edge and `--edge` falls to 0.
+ *
+ * On touch screens the light follows a finger while it is down; otherwise it
+ * sits at a fixed point in the viewport so borders glint as they scroll by.
  */
 export function useEdgeGlow() {
   useEffect(() => {
@@ -39,24 +42,67 @@ export function useEdgeGlow() {
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(update)
     }
-    const onMove = (e: PointerEvent) => {
+    // Touch has no hover: a finger leaves its last position behind, and that
+    // stale point then lights whatever scrolls under it. So the light follows
+    // a finger only while it is down, and otherwise rests at a fixed spot in
+    // the viewport, catching each border as the page scrolls past it.
+    const touch = window.matchMedia('(hover: none)')
+    let held = false
+    let release = 0
+    const rest = () => {
+      if (touch.matches) {
+        px = window.innerWidth / 2
+        py = window.innerHeight * 0.38
+      } else {
+        px = py = -1e5
+      }
+      schedule()
+    }
+    const track = (e: PointerEvent) => {
       px = e.clientX
       py = e.clientY
       schedule()
     }
-    const onLeave = () => {
-      px = py = -1e5
-      schedule()
+    const onMove = (e: PointerEvent) => {
+      if (e.pointerType === 'mouse' || held) track(e)
+    }
+    const onDown = (e: PointerEvent) => {
+      if (e.pointerType === 'mouse') return
+      clearTimeout(release)
+      held = true
+      track(e)
+    }
+    // Also fires as pointercancel when the browser takes over to scroll
+    const onUp = (e: PointerEvent) => {
+      if (e.pointerType === 'mouse') return
+      held = false
+      clearTimeout(release)
+      release = window.setTimeout(rest, 250)
+    }
+    const onResize = () => {
+      if (!held) rest()
     }
 
+    rest()
     window.addEventListener('pointermove', onMove, { passive: true })
+    window.addEventListener('pointerdown', onDown, { passive: true })
+    window.addEventListener('pointerup', onUp, { passive: true })
+    window.addEventListener('pointercancel', onUp, { passive: true })
     window.addEventListener('scroll', schedule, { passive: true })
-    document.documentElement.addEventListener('pointerleave', onLeave)
+    window.addEventListener('resize', onResize)
+    touch.addEventListener('change', onResize)
+    document.documentElement.addEventListener('pointerleave', rest)
     return () => {
       cancelAnimationFrame(frame)
+      clearTimeout(release)
       window.removeEventListener('pointermove', onMove)
+      window.removeEventListener('pointerdown', onDown)
+      window.removeEventListener('pointerup', onUp)
+      window.removeEventListener('pointercancel', onUp)
       window.removeEventListener('scroll', schedule)
-      document.documentElement.removeEventListener('pointerleave', onLeave)
+      window.removeEventListener('resize', onResize)
+      touch.removeEventListener('change', onResize)
+      document.documentElement.removeEventListener('pointerleave', rest)
     }
   }, [])
 }

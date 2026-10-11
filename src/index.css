@@ -33,7 +33,7 @@
 }
 
 :root[data-theme='light'] {
-  --card-tint: linear-gradient(160deg, rgba(255, 255, 255, 0.66), rgba(255, 255, 255, 0.6));
+  --card-tint: linear-gradient(160deg, rgba(255, 255, 255, 0.54), rgba(255, 255, 255, 0.46));
   --chip-tint: rgba(255, 255, 255, 0.62);
   --chip-tint-hover: rgba(255, 255, 255, 0.88);
   --stroke: rgba(31, 26, 61, 0.14);
@@ -46,7 +46,8 @@
   --name-shadow: rgba(31, 47, 90, 0.28);
   --hero-halo: 0 0 12px rgba(255, 255, 255, 0.9), 0 0 2px rgba(255, 255, 255, 0.9);
   --page: #a6d3fa;
-  --edge-light: color-mix(in srgb, var(--accent) 70%, white);
+  /* Sunlight amber: warm against the blue sky, still visible on white glass */
+  --edge-light: #ffb21f;
   --chip-shadow: rgba(40, 60, 120, 0.12);
   --glass-depth: transparent;
 }
@@ -254,10 +255,18 @@ button.lg-box {
   justify-content: center;
   align-items: center;
   gap: 10px;
-  padding: 8px 32px 56px;
+  /* A pill, so the text stays readable over the terrain */
+  width: fit-content;
+  max-width: calc(100% - 32px);
+  margin: 8px auto 56px;
+  padding: 7px 16px;
+  border: 1px solid var(--stroke);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--page) 82%, transparent);
+  backdrop-filter: blur(8px);
   font-family: var(--mono);
   font-size: 12px;
-  color: var(--muted);
+  color: var(--text);
 }
 
 /* ───────────── Intro header ───────────── */

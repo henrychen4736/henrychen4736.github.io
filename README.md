@@ -4,7 +4,7 @@ A pixel-art × liquid-glass portfolio for students — built to impress recruite
 
 - **Pixel-art background**: a procedurally drawn night city (`src/components/PixelScene.tsx`), rendered crisp at any size
 - **Liquid glass UI**: [`liquid-glass-react`](https://github.com/rdev/liquid-glass-react) — edge refraction, chromatic aberration, and hover/press highlights. Full refraction in Chromium; Safari/Firefox get the frosted blur. Wrapped by `src/components/Glass.tsx` so it works in normal page layout (presets: `card`, `button`, `chip`).
-- **Light & dark themes**: sun/moon toggle (remembered per visitor, defaults to the OS setting); the pixel city switches between night and day
+- **Light & dark themes**: sun/moon toggle (remembered per visitor, defaults to the OS setting); the Terraria-style pixel world switches between night and day
 - **Bento layout**: About, Contact, Education, Awards, GitHub activity, Projects, Experience, Publications, Skills
 
 ## Quick start
@@ -31,7 +31,7 @@ All content is in **`src/config/site.ts`** — no component edits needed.
 
 - Empty any array to hide that card.
 - Drop your résumé at `public/cv.pdf`.
-- Colors for both themes, heatmap palettes, scene colors, pixel size, and the skyline seed are in **`src/config/theme.ts`**. Set `defaultMode` to `'dark'`, `'light'`, or `'system'`.
+- Colors for both themes, heatmap palettes, scene colors, pixel size, and the world seed are in **`src/config/theme.ts`**. Set `defaultMode` to `'dark'`, `'light'`, or `'system'`.
 - `public/cv.pdf` ships as a placeholder so the Résumé button works out of the box (it opens in a new tab).
 - Rearrange cards by moving components between the columns in `src/App.tsx`. Mobile order is set in `src/index.css` (`.card--*` `order` rules).
 

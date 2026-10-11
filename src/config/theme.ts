@@ -29,17 +29,29 @@ export interface Palette {
     orb: { body: string; shade: string; halo: string; crescent: boolean }
     stars: boolean
     clouds: { light: string; shade: string; count: number }
-    /** Far → near layers; each layer picks per-building colors from its list */
-    buildings: string[][]
-    /** Ground band at the bottom */
-    ground: string
-    /** Lit rooftop edge (moonlight / sunlight). '' for none */
-    rim: string
-    windows: string[]
-    windowAlpha: number
-    /** Multiplier on how many windows are drawn */
-    litDensity: number
-    ledge: string
+    /** Background ranges, far → near */
+    mountains: { body: string; light: string; snow: string }[]
+    /** Distant treeline: [body, lit top] */
+    forest: string[]
+    /** Terrain tiles, each [light, base, dark] */
+    grass: string[]
+    dirt: string[]
+    stone: string[]
+    ores: string[][]
+    /** Cave back wall: [base, speckle] */
+    cave: string[]
+    trunk: string[]
+    /** [light, mid, dark, outline] */
+    leaves: string[]
+    flowers: string[]
+    /** Cabin */
+    wood: string[]
+    roof: string[]
+    window: string
+    /** [flame tip, flame base] */
+    torch: string[]
+    /** Light cast by torches and windows; strength 0–1 */
+    glow: { color: string; strength: number }
     /** How much the scene is washed toward the page color (0–1) */
     dim: number
     dimColor: string
@@ -51,7 +63,7 @@ export const theme = {
 
   /** Screen pixels per art pixel. Bigger = chunkier. */
   pixelSize: 5,
-  /** Seed for the city layout — change for a different skyline */
+  /** Seed for the world — change for different terrain */
   seed: 7,
 
   dark: {
@@ -68,13 +80,28 @@ export const theme = {
       orb: { body: '#f4ebc8', shade: '#d9cc9a', halo: '#4a3a80', crescent: true },
       stars: true,
       clouds: { light: '#6b3a7a', shade: '#4a2a6a', count: 4 },
-      buildings: [['#2e2560'], ['#1b1545'], ['#0b0820']],
-      ground: '#05040f',
-      rim: '#5a4a9c',
-      windows: ['#ffcf6b', '#ffcf6b', '#ffd98a', '#ffb347', '#9fd3ff'],
-      windowAlpha: 0.9,
-      litDensity: 0.65,
-      ledge: '#05040f',
+      mountains: [
+        { body: '#2a2358', light: '#352c6a', snow: '#5c54a0' },
+        { body: '#201a48', light: '#2a2258', snow: '#4a4288' },
+      ],
+      forest: ['#15203a', '#1d2c48'],
+      grass: ['#3f8f4a', '#2a6a3c', '#1c4a30'],
+      dirt: ['#5e4338', '#4a3229', '#33221d'],
+      stone: ['#5a5a70', '#45455a', '#303042'],
+      ores: [
+        ['#c88058', '#9a5434', '#683620'], // copper
+        ['#a0949a', '#7c7078', '#544c54'], // iron
+        ['#ffe070', '#c8a028', '#806410'], // gold
+      ],
+      cave: ['#1c1420', '#140e18'],
+      trunk: ['#5c4638', '#443228', '#2c2018'],
+      leaves: ['#3c8a50', '#286a40', '#1a4a32', '#102c24'],
+      flowers: ['#b04c68', '#b89a40', '#9a9ab0', '#7a64c0'],
+      wood: ['#7c5c44', '#5c4030', '#3a2820'],
+      roof: ['#6a3038', '#451f28'],
+      window: '#ffcf6b',
+      torch: ['#fff2a0', '#ff9a30'],
+      glow: { color: '#ffb040', strength: 0.9 },
       dim: 0.3,
       dimColor: '#05040d',
     },
@@ -94,18 +121,28 @@ export const theme = {
       orb: { body: '#fff3b0', shade: '#ffc94a', halo: '#b4dbff', crescent: false },
       stars: false,
       clouds: { light: '#ffffff', shade: '#dcebff', count: 5 },
-      buildings: [
-        ['#b7c8e4', '#c3d0e6', '#aebfdc'], // hazy distance
-        ['#d9bba3', '#d3c8b0', '#a9c0cc', '#cdaeae', '#b2c2a8'], // soft mid-rise facades
-        ['#7d6672', '#56698a', '#836b55', '#4b6f6a', '#625a7e'], // muted foreground
+      mountains: [
+        { body: '#a9c3e6', light: '#bcd2ee', snow: '#eef6ff' },
+        { body: '#86a6cf', light: '#9bb8dc', snow: '#e3eefc' },
       ],
-      ground: '#d6d0c4',
-      rim: '#f4f8ff',
-      /* Daytime windows: dark glass with the odd reflection */
-      windows: ['#2e3d5c', '#2e3d5c', '#3a4c6f', '#e6f4ff'],
-      windowAlpha: 0.8,
-      litDensity: 1,
-      ledge: '#bdb5a8',
+      forest: ['#5f9a6c', '#79b07e'],
+      grass: ['#7ddc4e', '#4fb335', '#2f8a2b'],
+      dirt: ['#b07a4f', '#976038', '#774726'],
+      stone: ['#a3a3ab', '#85858f', '#666672'],
+      ores: [
+        ['#f0a070', '#d0703c', '#964a24'], // copper
+        ['#d8c4b0', '#b09880', '#806c5c'], // iron
+        ['#fff08a', '#e8c030', '#a88010'], // gold
+      ],
+      cave: ['#4a3626', '#3a2a1e'],
+      trunk: ['#a47a52', '#7a5436', '#553822'],
+      leaves: ['#8fe060', '#4fb83a', '#2c8a30', '#1c5c28'],
+      flowers: ['#ff6b8a', '#ffd84a', '#ffffff', '#b08cff'],
+      wood: ['#c89a60', '#a07040', '#70482a'],
+      roof: ['#b04a3a', '#7c2e28'],
+      window: '#9fd3ff',
+      torch: ['#fff2a0', '#ff9a30'],
+      glow: { color: '#ffb040', strength: 0.5 },
       dim: 0,
       dimColor: '#ffffff',
     },
