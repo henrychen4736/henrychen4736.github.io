@@ -11,12 +11,12 @@ export type SocialKind = 'github' | 'linkedin' | 'scholar' | 'email' | 'x' | 'or
 
 export const site = {
   meta: {
-    title: 'Alex Rivera — Portfolio',
+    title: 'Henry Chen — Portfolio',
     description: 'CS student working on machine learning systems. Projects, research, and experience.',
   },
 
   person: {
-    name: 'Alex Rivera',
+    name: 'Henry Chen',
     title: 'CS Student / ML Researcher',
     location: 'City, Country',
     /** Optional status line next to your name. '' to hide. */
@@ -26,7 +26,7 @@ export const site = {
 
   /** Short lines, like a terminal bio. 4–7 work best. */
   about: [
-    'cs undergrad @ university of somewhere',
+    'statistics BA @ uc berkeley',
     'researching efficient ml systems',
     'prev - swe intern @ company',
     'ta for intro to algorithms',
@@ -37,9 +37,9 @@ export const site = {
   contact: {
     blurb: "I'm always open to research collaborations and internship opportunities. Say hi!",
     links: [
-      { kind: 'email', label: 'you@university.edu', href: 'mailto:you@university.edu' },
-      { kind: 'linkedin', label: 'LinkedIn', href: 'https://linkedin.com/in/your-handle' },
-      { kind: 'github', label: 'GitHub', href: 'https://github.com/your-handle' },
+      { kind: 'email', label: 'henrychen4736@berkeley.edu', href: 'mailto:henrychen4736@berkeley.edu' },
+      { kind: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/in/henry-chen-061230354/' },
+      { kind: 'github', label: 'GitHub', href: 'https://github.com/henrychen4736' },
       { kind: 'scholar', label: 'Google Scholar', href: 'https://scholar.google.com/' },
     ] as { kind: SocialKind; label: string; href: string }[],
   },

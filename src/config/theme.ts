@@ -108,13 +108,14 @@ export const theme = {
   } satisfies Palette,
 
   light: {
-    text: '#17132e',
-    muted: '#3f3962',
-    faint: '#5e587f',
-    accent: '#4a3ad0',
+    /* Two hues only: sky blue, with sunlit amber as its complement */
+    text: '#101c33',
+    muted: '#34425e',
+    faint: '#55627c',
+    accent: '#1a56c4',
     gold: '#9a4f00',
-    heat: ['#d3d9e6', '#a9dcb6', '#6cc387', '#3a9f5c', '#1f7542'],
-    skillColors: ['#5b3fd6', '#0b6bcb', '#1f8a4c', '#a65300'],
+    heat: ['#d3d9e6', '#a9c8f2', '#6ea2e8', '#3a78d4', '#1a56c4'],
+    skillColors: ['#1a56c4'],
     scene: {
       sky: ['#7cbcf5', '#8cc5f7', '#a2d0f9', '#c3e1fb'],
       dither: 0.2,

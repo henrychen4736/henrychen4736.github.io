@@ -26,6 +26,8 @@
   --glass-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.7);
   --name-glow: rgba(196, 167, 255, 0.35);
   --name-shadow: rgba(0, 0, 0, 0.45);
+  --glitch-a: #ffb84d;
+  --glitch-b: #5aa2ff;
   --page: #0b0a1f;
   --edge-light: rgba(255, 255, 255, 0.9);
   --chip-shadow: rgba(0, 0, 0, 0.35);
@@ -38,12 +40,14 @@
   --chip-tint-hover: rgba(255, 255, 255, 0.88);
   --stroke: rgba(31, 26, 61, 0.14);
   --line: rgba(31, 26, 61, 0.12);
-  --tag-bg: rgba(106, 63, 224, 0.08);
-  --tag-border: rgba(106, 63, 224, 0.26);
-  --tag-text: #3a2a9c;
+  --tag-bg: rgba(26, 86, 196, 0.08);
+  --tag-border: rgba(26, 86, 196, 0.26);
+  --tag-text: #143f94;
   --glass-shadow: 0 8px 30px rgba(40, 60, 120, 0.18);
   --name-glow: transparent;
   --name-shadow: rgba(31, 47, 90, 0.28);
+  --glitch-a: #ff9d1f;
+  --glitch-b: #1a56c4;
   --hero-halo: 0 0 12px rgba(255, 255, 255, 0.9), 0 0 2px rgba(255, 255, 255, 0.9);
   --page: #a6d3fa;
   /* Sunlight amber: warm against the blue sky, still visible on white glass */
@@ -315,11 +319,11 @@ button.lg-box {
 }
 
 .intro__name::before {
-  color: #ff4d9d;
+  color: var(--glitch-a);
 }
 
 .intro__name::after {
-  color: #3fe0ff;
+  color: var(--glitch-b);
 }
 
 .intro__name:hover::before {
@@ -382,8 +386,10 @@ button.lg-box {
   color: #b9f5cf;
 }
 
+/* Light mode keeps green to the dot alone */
 :root[data-theme='light'] .status {
-  background: rgba(236, 255, 242, 0.82);
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--text);
 }
 
 /* On a light pill the dot's glow reads as a pale square, so drop it */
@@ -448,19 +454,22 @@ button.lg-box {
   transform: translateY(-2px) rotate(-8deg);
 }
 
-.btn--primary {
+.btn--primary,
+.btn--primary:hover {
   background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 72%, white), color-mix(in srgb, var(--accent) 82%, transparent));
   color: #fff;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 0 0 1px color-mix(in srgb, var(--accent) 60%, white);
-  transition: background 0.25s, box-shadow 0.3s;
+  transition: filter 0.25s, box-shadow 0.3s;
 }
 
 :root[data-theme='dark'] .btn--primary {
   color: #1a1033;
 }
 
+/* Brighten the same gradient: swapping to a flat color can't be
+   interpolated, so the gradient vanished for a frame before the fade */
 .btn--primary:hover {
-  background: var(--accent);
+  filter: brightness(1.1) saturate(1.1);
 }
 
 .icon-btn {
